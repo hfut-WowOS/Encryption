@@ -213,10 +213,7 @@ public class Utils {
         String s = bin.substring(1, 8);
         byte b = Byte.parseByte(s, 2);
         char c = bin.charAt(0);
-        //return bin.charAt(0) == '0' ? b : (byte)(~b + 1);
-        if (bin.charAt(0) == '1') {
-            b = (byte)(~b + 1);
-        }
-        return b;
+        return bin.charAt(0) == '0' ? b : (byte)(b - 128);
+
     }
 }

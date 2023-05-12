@@ -56,20 +56,11 @@ public class Main {
     private static void WriteFile(String path, Vector<String> list) throws IOException {
         OutputStream os = new FileOutputStream(path);
         for (String string : list) {
-            // String l = string.substring(0, 32);
-            // String r = string.substring(32, 64);
-
-            // os.write(Integer.parseUnsignedInt(l, 2));
-            // os.write(Integer.parseUnsignedInt(r, 2));
             for (int i = 0; i < 8; i++) {
                 byte b = Utils.parse_binString(string.substring(i * 8, i * 8 + 8));
                 os.write(b);
             }
         }
-        // for (String string : list) {
-        //     byte[] array = new BigInteger(string, 2).toByteArray();
-        //     os.write(array);
-        // }
         os.close();
     }
 
@@ -96,7 +87,7 @@ public class Main {
             for (int i = 0; i < 64 - last_len; i++) {
                 append.append("0");
             }
-            ret.set(ret.capacity() - 1, append.toString());
+            ret.set(ret.size() - 1, append.toString());
         }
         return ret;
     }
