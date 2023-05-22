@@ -1,3 +1,9 @@
+package src;
+
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
 import java.util.Vector;
 
 public class DES {
@@ -171,7 +177,7 @@ public class DES {
     }
 
     private String SBoxes(String s) {
-        assert(s.length() == 48);
+        assert (s.length() == 48);
         String res = "";
         // 拆分8个6位子串
         for (int i = 0; i < 8; i++) {
@@ -199,8 +205,8 @@ public class DES {
     private String F_Function(String s, String k, int i) {
         // E拓展：32->48
         String e_s = ExpansionPermutation(s);
-        assert(e_s.length() == 48);
-        assert(k.length() == 48);
+        assert (e_s.length() == 48);
+        assert (k.length() == 48);
         // 异或：48->48
         String xor_s = Utils.string_xor(k, e_s);
         // S_box: 48->32
@@ -212,7 +218,7 @@ public class DES {
     // 产生16个子密钥
     private void GenerateSubKey(String k) {
         String key = new String(k);
-        assert(key.length() == 64);
+        assert (key.length() == 64);
         key = PermutedChoiceOne(key);
         String left = key.substring(0, 28);
         String right = key.substring(28, 56);
@@ -226,7 +232,7 @@ public class DES {
         }
     }
 
-    public String Encryption(String s) {
+    public String Encryption64(String s) {
         assert (s.length() == 64);
         // IP 置换
         s = IP_transform(s);
@@ -244,7 +250,7 @@ public class DES {
         return RevIp_transform(res);
     }
 
-    public String Decryption(String s) {
+    public String Decryption64(String s) {
         assert (s.length() == 64);
         // IP 置换
         s = IP_transform(s);
@@ -260,6 +266,83 @@ public class DES {
         }
         String res = right + left;
         return RevIp_transform(res);
+    }
+
+    private void WriteFile(String path, Vector<String> list) throws IOException {
+        OutputStream os = new FileOutputStream(path);
+        for (String string : list) {
+            for (int i = 0; i < string.length() / 8; i++) {
+                byte b = Utils.parse_binString(string.substring(i * 8, i * 8 + 8));
+                os.write(b);
+            }
+        }
+        os.close();
+    }
+
+    private Vector<String> ReadFile(String path) {
+        File file = new File(path);
+        try {
+            byte[] content = Utils.readByNIO(file);
+            return Utils.ByteArrayToBinaryVector(content);
+        } catch (IOException e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    public void EncryptionFile(String path, String enpath) {
+        try {
+            WriteFile(enpath, Encryption(ReadFile(path)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public void DecryptionFile(String path, String depath) {
+        try {
+            WriteFile(depath, Decryption(ReadFile(path)));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public Vector<String> Encryption(Vector<String> list) {
+        assert (KEY.length() == 64);
+        Vector<String> res = new Vector<>();
+        for (String string : list) {
+            // assert (string.length() == 64);
+            if (string.length() == 64) {
+                res.add(Encryption64(string));
+            } else {
+                res.add(string);
+            }
+        }
+        return res;
+    }
+
+    public Vector<String> Decryption(Vector<String> list) {
+        assert (KEY.length() == 64);
+        Vector<String> res = new Vector<>();
+        for (String string : list) {
+            // assert (string.length() == 64);
+            if (string.length() == 64) {
+                res.add(Decryption64(string));
+            } else {
+                res.add(string);
+            }
+        }
+        return res;
+    }
+
+    public String Encryption(String paragraph) {
+        byte[] list = paragraph.getBytes();
+        Vector<String> l = Utils.ByteArrayToBinaryVector(list);
+        Vector<String> en_l = Encryption(l);
+        StringBuffer buffer = new StringBuffer();
+        for (String string : en_l) {
+            buffer.append(string);
+        }
+        return buffer.toString();
     }
 
 }
