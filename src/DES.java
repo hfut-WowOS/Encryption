@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.OutputStream;
+import java.math.BigInteger;
 import java.util.Vector;
 
 public class DES {
@@ -342,7 +343,7 @@ public class DES {
         for (String string : en_l) {
             buffer.append(string);
         }
-        return buffer.toString();
+        return new BigInteger(buffer.toString(), 2).toString(16);
     }
 
 }
