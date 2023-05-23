@@ -2,7 +2,6 @@ package src;
 
 import java.io.*;
 import java.nio.ByteBuffer;
-import java.nio.MappedByteBuffer;
 import java.nio.channels.FileChannel;
 import java.util.HashMap;
 import java.util.Vector;
@@ -169,28 +168,6 @@ public class Utils {
         }
     }
 
-    public static byte[] readRandomAccess(File file) throws IOException {
-
-        // 1、使用RandomAccessFile打开文件管道
-        // 2、创建MappedByteBuffer，并使用NIO管道进行数据映射,加载数据到物理内存
-        // 3、读取数据到byte数组中。
-        FileChannel channel = new RandomAccessFile(file, "r").getChannel();
-        int fileSize = (int) channel.size();
-        try {
-            // load():
-            // 将此缓冲区的内容加载到物理内存中。此方法尽最大努力确保当它返回时，缓冲区的内容驻留在物理内存中。调用此方法可能会导致出现一些页面错误和I/O操作。
-            MappedByteBuffer buffer = channel.map(FileChannel.MapMode.READ_ONLY, 0, fileSize).load();
-            // remaining() 返回当前位置和限制之间的元素数。此缓冲区中剩余的元素数
-            byte[] result = new byte[fileSize];
-            if (buffer.remaining() > 0) {
-                buffer.get(result, 0, fileSize);
-            }
-            buffer.clear();
-            return result;
-        } finally {
-            closeChannel(channel);
-        }
-    }
 
     private static void checkFileExists(File file) throws FileNotFoundException {
         if (file == null || !file.exists()) {
@@ -226,9 +203,7 @@ public class Utils {
     public static byte parse_binString(String bin) {
         String s = bin.substring(1, 8);
         byte b = Byte.parseByte(s, 2);
-        char c = bin.charAt(0);
         return bin.charAt(0) == '0' ? b : (byte) (b - 128);
-
     }
 
     public static Vector<String> ByteArrayToBinaryVector(byte[] content) {
