@@ -7,11 +7,11 @@ public class RSA {
     private final static int numLength = 1024;//素数长度
     private final static int accuracy = 100;//素数的准确率为1-(2^(-accuracy))
 
-    //获取最大公约数
-    private BigInteger getGCD(BigInteger a, BigInteger b) {
-        if (b.byteValue() == 0) return a;
-        return getGCD(b, a.mod(b));
-    }
+    // //获取最大公约数
+    // private BigInteger getGCD(BigInteger a, BigInteger b) {
+    //     if (b.byteValue() == 0) return a;
+    //     return getGCD(b, a.mod(b));
+    // }
 
     //扩展欧几里得方法,计算 ax + by = 1中的x与y的整数解（a与b互质）
     private static BigInteger[] extGCD(BigInteger a, BigInteger b) {
