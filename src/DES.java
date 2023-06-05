@@ -5,12 +5,12 @@ import java.nio.channels.FileChannel;
 import java.nio.file.Files;
 import java.nio.file.Paths;
 
-public class Des {
+public class DES {
     private long Key;
     private long[] SubKeyList = new long[16];
     
 
-    Des(long Key) {
+    DES(long Key) {
         this.Key = Key;
         GenerateSubKey();
     }
