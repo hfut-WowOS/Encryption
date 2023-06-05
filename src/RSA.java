@@ -148,15 +148,15 @@ public class RSA {
     public static void main(String[] args) {
         SecretKey secretKey = RSA.generateKey();
         //明文内容不要超过1024位,超过后需要分段加密
-        String text = "Hello world";
+        String text = "qiming, 2020216774, 计算机20-2班";
         String chipper = RSA.encrypt(text, secretKey.getPublicKey());
 
-        System.out.println("加密后:\n" +
+        System.out.println("加密后: " +
                 //密文长度可能会随着随机密钥的改变而改变，最长不超过2048位
                 "密文二进制长度:" + new BigInteger(chipper).bitLength()
                 + "\n"
                 + chipper);
         String origin = RSA.decrypt(chipper, secretKey.getPrivateKey());
-        System.out.println("解密后:\n" + origin);
+        System.out.println("解密后: " + origin);
     }
 }
